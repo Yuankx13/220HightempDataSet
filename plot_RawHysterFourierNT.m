@@ -1,0 +1,30 @@
+function [exeHandle, Intens1Fq, Intens2Fq]=plot_RawHysterFourierNT(Exec, Len,...
+    SampRate, FigName, FigHandle, FullName, FreqPoint)
+HysterFt = abs(fft(Exec)/Len);
+F=(0:Len/2)*SampRate/Len;
+HysterFt = HysterFt(1:max(size(F)));
+[~, FreqT1]=min(abs(F-FreqPoint));
+[~, FreqT2]=min(abs(F-2*FreqPoint));
+figure(FigHandle);
+hold on;
+semilogy(F, HysterFt,'blue','LineWidth',1.2);
+set(gca,'FontSize',16);
+ylim([1e-5 inf]);
+xlim([0 10*FreqPoint]);
+xlabel('Frequency (s)','FontSize',20);
+ylabel('Intensity (dB)','FontSize',20);
+title([FigName ' Raw data vision '],'Interpreter','none','FontSize',28);
+Intens1Fq = HysterFt(FreqT1);
+Intens2Fq = HysterFt(FreqT2);
+% txt1=['X: ', num2str(F(FreqT1)), 'Hz', char(13,10)', 'Y:', num2str(Intens1Fq,'%e'), 'dB'];
+% txt2=['X: ', num2str(F(FreqT2)), 'Hz', char(13,10)', 'Y:', num2str(Intens2Fq,'%e'), 'dB'];
+% plot(F(FreqT1), Intens1Fq, 'rx', 'MarkerSize', 16);
+% plot(F(FreqT2), Intens2Fq, 'r+', 'MarkerSize', 16);
+hold off;
+% text(F(FreqT1)*1.05, HysterFt(FreqT1)*1.05, txt1, 'FontSize',24);
+% text(F(FreqT2)*1.05, HysterFt(FreqT2)*1.05, txt2, 'FontSize',24,'Color', 'r');
+set(gcf,'Position',[1,41,1536,755.6]);
+% saveas(gcf,strcat(FullName, '_01FFT.fig'));
+saveas(gcf,strcat(FullName, '_01FFT.svg'));
+saveas(gcf,strcat(FullName, '_01FFT.png'));
+exeHandle=1;
